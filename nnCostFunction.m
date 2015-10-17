@@ -62,6 +62,8 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
+
+% add a ones column to X
 X = [ones(m,1) X];
 
 
@@ -72,10 +74,11 @@ a2 = [ones(m,1) a2'];
 
 h_theta = sigmoid(Theta2 * a2'); % h_theta equals z3
 
-% y(k) - the great trick - we need to recode the labels as vectors containing only values 0 or 1 (page 5 of ex4.pdf)
+% y(k) - the great trick - we need to recode the labels as vectors containing only values 0 or 1
 yk = zeros(num_labels, m); 
 for i=1:m,
-  yk(y(i),i)=1;
+  yk(y(i),i)=1; % yk isn't a function. 
+                % It's just describing the location of the variable in the matrix. y(i) is really i and i is j.
 end
 
 % follow the form
@@ -95,59 +98,10 @@ Reg = lambda  * (sum( sum ( t1.^ 2 )) + sum( sum ( t2.^ 2 ))) / (2*m);
 J = J + Reg;
 
 
+
+
+
 % -------------------------------------------------------------
-
-% Backprop
-
-for t=1:m,
-
-	% dummie pass-by-pass
-	% forward propag
-
-	a1 = X(t,:); % X already have bias
-	z2 = Theta1 * a1';
-
-	a2 = sigmoid(z2);
-	a2 = [1 ; a2]; % add bias
-
-	z3 = Theta2 * a2;
-
-	a3 = sigmoid(z3); % final activation layer a3 == h(theta)
-
-	
-	% back propag (god bless me)	
-	
-	z2=[1; z2]; % bias
-
-	delta_3 = a3 - yk(:,t); % y(k) trick - getting columns of t element
-	delta_2 = (Theta2' * delta_3) .* sigmoidGradient(z2);
-
-	% skipping sigma2(0) 
-	delta_2 = delta_2(2:end); 
-
-	Theta2_grad = Theta2_grad + delta_3 * a2';
-	Theta1_grad = Theta1_grad + delta_2 * a1; % I don't know why a1 doesn't need to be transpost (brute force try)
-
-end;
-
-% Theta1_grad = Theta1_grad ./ m;
-% Theta2_grad = Theta2_grad ./ m;
-
-
-% Regularization (here you go)
-
-
-	Theta1_grad(:, 1) = Theta1_grad(:, 1) ./ m;
-	
-	Theta1_grad(:, 2:end) = Theta1_grad(:, 2:end) ./ m + ((lambda/m) * Theta1(:, 2:end));
-	
-	
-	Theta2_grad(:, 1) = Theta2_grad(:, 1) ./ m;
-	
-	Theta2_grad(:, 2:end) = Theta2_grad(:, 2:end) ./ m + ((lambda/m) * Theta2(:, 2:end));
-
-
-
 
 % =========================================================================
 
