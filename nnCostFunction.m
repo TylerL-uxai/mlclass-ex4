@@ -75,7 +75,8 @@ h_theta = sigmoid(Theta2 * a2'); % h_theta equals z3
 % y(k) - the great trick - we need to recode the labels as vectors containing only values 0 or 1 (page 5 of ex4.pdf)
 yk = zeros(num_labels, m); 
 for i=1:m,
-  yk(y(i),i)=1;
+  yk(y(i),i)=1; % yk() isn't a function. It's the location of the data in the matrix.
+                % if you remember data is located in (i,j) then y(i) is i and i is j.
 end
 
 % follow the form
